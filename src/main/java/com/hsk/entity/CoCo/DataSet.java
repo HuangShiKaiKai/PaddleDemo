@@ -18,7 +18,7 @@ import java.util.List;
 public class DataSet {
     // 图片
     @JsonProperty("images")
-    private List<CoCoImage> images;
+    private List<Image> images;
 
     // 标注文件
     @JsonProperty("annotations")

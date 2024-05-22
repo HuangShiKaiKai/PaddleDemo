@@ -1,5 +1,6 @@
 package com.hsk;
 
+import com.hsk.utils.DataSetUtil;
 import com.hsk.utils.PaddleServingUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +41,23 @@ class PaddleDemoApplicationTests {
      * @Param []
      **/
     @Test
-    void test2(){
+    void test2() {
         PaddleServingUtil.createLabel();
     }
 
+
+    /*
+     * @return
+     * @Author HuangShiKai
+     * @Description //voc转换coco数据集
+     * @Date 2024/4/23 9:34
+     * @Param []
+     **/
+    @Test
+    void test3() {
+        // 标签文件路径
+        String labelTxtPath = "F:\\角标ocr\\Label.txt";
+        String targetPath = "F:\\ocrCOCO";
+        DataSetUtil.ocrDataSetToCoco(labelTxtPath, targetPath);
+    }
 }
