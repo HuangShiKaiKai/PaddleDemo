@@ -2,13 +2,11 @@ package com.hsk.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hsk.entity.CoCo.*;
 import com.hsk.entity.voc.VocImage;
 import com.hsk.entity.voc.VocItem;
-import com.hsk.vo.VocItemVo;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +27,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DataSetUtil {
 
+    // 图片路径
     private static final String IMAGE_PATH = "images";
+    // 标注信息路径
     private static final String ANNOTATION_PATH = "annotations";
 
     /*
@@ -254,12 +254,9 @@ public class DataSetUtil {
     public static List<Categories> analysisCategories(Map<String, Integer> vocKeyCls) {
         List<Categories> categories = new ArrayList<>();
         try {
-            vocKeyCls.forEach((keyCls, id) -> {
-                Categories category = new Categories();
-                category.setId(id);
-                category.setName(keyCls);
-                categories.add(category);
-            });
+            categories = vocKeyCls.entrySet().stream()
+                    .map(entry -> new Categories(entry.getValue(), entry.getKey()))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("解析Categories失败:", e);
         }

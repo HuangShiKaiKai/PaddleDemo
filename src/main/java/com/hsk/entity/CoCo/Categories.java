@@ -14,10 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Categories {
-    // 识别字段名称
-    @JsonProperty("name")
-    private String name;
     // category_id
     @JsonProperty("id")
     private int id;
+    // 识别字段名称
+    @JsonProperty("name")
+    private String name;
+
 }
