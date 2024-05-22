@@ -54,10 +54,12 @@ class PaddleDemoApplicationTests {
      * @Param []
      **/
     @Test
-    void test3() {
-        // 标签文件路径
+    void ocrDataSetToCoco() {
+        // PPOCRLabel标签文件路径
         String labelTxtPath = "F:\\角标ocr\\Label.txt";
+        // 目标路径
         String targetPath = "F:\\ocrCOCO";
+        // 转换
         DataSetUtil.ocrDataSetToCoco(labelTxtPath, targetPath);
     }
 }
