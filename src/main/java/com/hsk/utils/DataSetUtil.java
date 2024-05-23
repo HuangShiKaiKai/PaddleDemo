@@ -126,8 +126,8 @@ public class DataSetUtil {
         Map<String, Integer> vocKeyCls = new HashMap<>();
         // 用于生成唯一索引，从1开始
         AtomicInteger index = new AtomicInteger(1);
-        vocImages.stream()
-                .flatMap(vocImage -> vocImage.getItems().stream())
+        vocImages.parallelStream()
+                .flatMap(vocImage -> vocImage.getItems().parallelStream())
                 .forEach(vocItem -> {
                     // 获取分类
                     vocKeyCls.computeIfAbsent(vocItem.getKeyCls(), k -> index.getAndIncrement());
@@ -150,7 +150,7 @@ public class DataSetUtil {
         List<Image> images = new ArrayList<>();
         try {
             // 获取图片名及id
-            images = vocImages.stream()
+            images = vocImages.parallelStream()
                     .map(vocImage -> {
                         Image image = new Image();
                         // 从map中获取id
@@ -187,7 +187,7 @@ public class DataSetUtil {
 
             vocImages.forEach(vocImage -> {
                 // 根据文件名分组，获取vocimage对象
-                Map<String, List<VocItem>> vocItemMap = vocImage.getItems().stream().collect(Collectors.groupingBy(VocItem::getKeyCls));
+                Map<String, List<VocItem>> vocItemMap = vocImage.getItems().parallelStream().collect(Collectors.groupingBy(VocItem::getKeyCls));
                 vocItemMap.forEach((keyCls, vocItems) -> {
                     Annotation annotation = new Annotation();
                     annotation.setId(id.getAndIncrement());
@@ -196,8 +196,8 @@ public class DataSetUtil {
                     // 分类id
                     annotation.setCategoryId(vocKeyCls.get(keyCls));
                     ExtraInfo extraInfo = new ExtraInfo();
-                    extraInfo.setLabelType("key");
-                    List<LabelValue> labelValues = vocItems.stream()
+                    extraInfo.setLabelType("value");
+                    List<LabelValue> labelValues = vocItems.parallelStream()
                             .map(vocItem -> {
                                 LabelValue labelValue = new LabelValue();
                                 // 识别文本
@@ -254,7 +254,7 @@ public class DataSetUtil {
     public static List<Categories> analysisCategories(Map<String, Integer> vocKeyCls) {
         List<Categories> categories = new ArrayList<>();
         try {
-            categories = vocKeyCls.entrySet().stream()
+            categories = vocKeyCls.entrySet().parallelStream()
                     .map(entry -> new Categories(entry.getValue(), entry.getKey()))
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -302,7 +302,10 @@ public class DataSetUtil {
                 String targetPath = targetPathRoot + File.separator + IMAGE_PATH + File.separator + image.getFileName();
                 File sourceFile = new File(imagePath);
                 File targetFile = new File(targetPath);
-                FileUtil.copyFile(sourceFile, targetFile);
+                // 如果图片不存在就复制
+                if (!targetFile.exists()) {
+                    FileUtil.copyFile(sourceFile, targetFile);
+                }
             });
         } catch (Exception e) {
             log.error("复制图片失败:", e);
