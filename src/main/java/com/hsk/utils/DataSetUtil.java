@@ -312,4 +312,28 @@ public class DataSetUtil {
         }
     }
 
+    public static void copyLabelImage(String labelParentPath, String targetPathRoot) {
+        // 读取txt文件
+        try {
+            // 获取目录
+            List<String> lines = Files.readAllLines(Path.of(labelParentPath));
+            lines.forEach(line -> {
+                String[] split = line.split("\t");
+                String imagePath = split[0];
+                String imageName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+                String sourcePath = "F:" + File.separator + imagePath;
+                // 复制到目标路径
+
+                String targetPath = targetPathRoot + File.separator + imageName;
+                if (!new File(targetPath).exists()) {
+                    FileUtil.copyFile(sourcePath, targetPath);
+                    // 删除源文件
+                    FileUtil.del(sourcePath);
+                }
+            });
+        } catch (Exception e) {
+            log.error("复制标签图片失败:", e);
+        }
+    }
+
 }

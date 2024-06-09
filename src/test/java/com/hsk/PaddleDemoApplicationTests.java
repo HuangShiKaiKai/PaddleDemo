@@ -62,4 +62,11 @@ class PaddleDemoApplicationTests {
         // 转换
         DataSetUtil.ocrDataSetToCoco(labelTxtPath, targetPath);
     }
+
+    @Test
+    void test3() {
+        String labelParentPath = "F:\\product0\\Label.txt";
+        String targetPathRoot = "F:\\productAll";
+        DataSetUtil.copyLabelImage(labelParentPath, targetPathRoot);
+    }
 }
